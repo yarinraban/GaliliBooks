@@ -22,6 +22,7 @@ const ALLOWED_EMAILS = new Set([
 ]);
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
