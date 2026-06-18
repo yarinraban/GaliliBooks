@@ -11,6 +11,7 @@ interface Book {
   publisher: string;
   notes?: string | null;
   level?: string | null;
+  coverUrl?: string | null;
   mandatory: boolean;
   order: number;
 }
@@ -28,7 +29,7 @@ const HEBREW_YEARS: Record<string, string> = {
 
 const LEVEL_PRESETS = ["כולם", "3 יח\"ל", "4 יח\"ל", "5 יח\"ל", "מורחב", "5 points", "4 points", "3 points"];
 
-const EMPTY_FORM = { subject: "", title: "", author: "", publisher: "", notes: "", level: "", mandatory: true };
+const EMPTY_FORM = { subject: "", title: "", author: "", publisher: "", notes: "", level: "", coverUrl: "", mandatory: true };
 
 export default function AdminGradePage({ params }: { params: Promise<{ grade: string }> }) {
   const { grade } = use(params);
@@ -90,7 +91,7 @@ export default function AdminGradePage({ params }: { params: Promise<{ grade: st
     return acc;
   }, {});
 
-  function FormFields({ data, onChange }: { data: typeof EMPTY_FORM; onChange: (d: typeof EMPTY_FORM) => void }) {
+  function FormFields({ data, onChange }: { data: typeof EMPTY_FORM & { coverUrl: string }; onChange: (d: typeof EMPTY_FORM & { coverUrl: string }) => void }) {
     return (
       <div className="space-y-3">
         {(["subject", "title", "author", "publisher"] as const).map((field) => (
@@ -136,6 +137,19 @@ export default function AdminGradePage({ params }: { params: Promise<{ grade: st
           />
         </div>
 
+        <div>
+          <label className="block text-sm text-gray-600 mb-0.5">כתובת תמונת שער (URL)</label>
+          <input
+            value={data.coverUrl}
+            onChange={(e) => onChange({ ...data, coverUrl: e.target.value })}
+            placeholder="https://..."
+            className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          {data.coverUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={data.coverUrl} alt="שער" className="mt-2 h-24 rounded border object-contain" />
+          )}
+        </div>
         <div>
           <label className="block text-sm text-gray-600 mb-0.5">הנחיות / הערות</label>
           <textarea
@@ -228,7 +242,7 @@ export default function AdminGradePage({ params }: { params: Promise<{ grade: st
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <h3 className="font-bold text-lg mb-4">עריכת פריט</h3>
             <FormFields
-              data={{ subject: editing.subject, title: editing.title, author: editing.author, publisher: editing.publisher, notes: editing.notes ?? "", level: editing.level ?? "", mandatory: editing.mandatory }}
+              data={{ subject: editing.subject, title: editing.title, author: editing.author, publisher: editing.publisher, notes: editing.notes ?? "", level: editing.level ?? "", coverUrl: editing.coverUrl ?? "", mandatory: editing.mandatory }}
               onChange={(d) => setEditing({ ...editing, ...d })}
             />
             <div className="flex gap-3 mt-5">

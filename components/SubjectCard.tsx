@@ -10,6 +10,7 @@ export interface Book {
   publisher: string;
   notes?: string | null;
   level?: string | null;
+  coverUrl?: string | null;
   mandatory: boolean;
 }
 
@@ -72,6 +73,16 @@ function BookRow({
           : "bg-white"
       }`}
     >
+      {/* תמונת שער */}
+      {book.coverUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={book.coverUrl}
+          alt={book.title}
+          className={`h-16 w-12 object-cover rounded border border-gray-200 shrink-0 self-start mt-0.5 ${status === "skip" ? "opacity-40" : ""}`}
+        />
+      )}
+
       {/* רמה + חובה/רשות */}
       <div className="flex flex-col gap-1 items-start shrink-0 w-24 pt-0.5">
         {book.level && (
