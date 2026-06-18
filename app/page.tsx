@@ -30,8 +30,10 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">📚 רשימות ספרים</h1>
-        <p className="text-gray-500 text-lg">שנת לימודים {hebrewYear}</p>
+        <img src="/logo.svg" alt="לוגו גלילי" className="w-24 h-24 mx-auto mb-4" />
+        <h1 className="text-4xl font-bold text-gray-900 mb-1">רשימות ספרים</h1>
+        <p className="text-gray-500 text-sm mb-1">בית ספר גלילי</p>
+        <p className="text-gray-400 text-base">שנת לימודים {hebrewYear}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl">

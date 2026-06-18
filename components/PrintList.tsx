@@ -55,9 +55,12 @@ export default function PrintList({ books, grade, hebrewYear, storageKey }: Prin
       </button>
 
       <div className="hidden print:block p-8 font-sans" dir="rtl">
-        <div className="text-center mb-6 border-b-2 border-gray-800 pb-4">
-          <h1 className="text-2xl font-bold">רשימת ספרים – {GRADE_LABELS[grade] ?? `שכבה ${grade}`}</h1>
-          <p className="text-gray-600 mt-1">שנת לימודים {hebrewYear}</p>
+        <div className="flex items-center gap-4 mb-6 border-b-2 border-gray-800 pb-4">
+          <img src="/logo.svg" alt="לוגו גלילי" className="w-16 h-16 shrink-0" />
+          <div>
+            <h1 className="text-2xl font-bold">רשימת ספרים – {GRADE_LABELS[grade] ?? `שכבה ${grade}`}</h1>
+            <p className="text-gray-600 mt-0.5">בית ספר גלילי · שנת לימודים {hebrewYear}</p>
+          </div>
         </div>
 
         {Object.entries(grouped).map(([subject, subBooks]) => (

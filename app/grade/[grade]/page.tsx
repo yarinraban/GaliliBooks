@@ -82,8 +82,13 @@ export default function GradePage({ params }: { params: Promise<{ grade: string 
       <header className={`bg-gradient-to-br ${GRADE_COLORS[grade] ?? "from-gray-500 to-gray-700"} text-white p-6 print:hidden`}>
         <div className="max-w-3xl mx-auto">
           <Link href="/" className="text-white/70 hover:text-white text-sm mb-3 inline-block">← חזרה</Link>
-          <h1 className="text-3xl font-bold">{GRADE_LABELS[grade] ?? `שכבה ${grade}`}</h1>
-          <p className="text-white/80 mt-1">שנת לימודים {hebrewYear}</p>
+          <div className="flex items-center gap-4">
+            <img src="/logo.svg" alt="לוגו גלילי" className="w-14 h-14 rounded-full bg-white/20 p-1 shrink-0" />
+            <div>
+              <h1 className="text-3xl font-bold">{GRADE_LABELS[grade] ?? `שכבה ${grade}`}</h1>
+              <p className="text-white/80 mt-0.5">שנת לימודים {hebrewYear}</p>
+            </div>
+          </div>
 
           {books.length > 0 && (
             <div className="mt-4">
