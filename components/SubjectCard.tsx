@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export interface Book {
   id: number;
@@ -15,6 +15,35 @@ export interface Book {
 }
 
 export type Status = "none" | "bought" | "skip";
+
+function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      onClick={onClose}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl object-contain"
+        onClick={(e) => e.stopPropagation()}
+      />
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 text-white text-3xl leading-none hover:text-gray-300"
+        aria-label="סגור"
+      >
+        ×
+      </button>
+    </div>
+  );
+}
 
 export function getStatus(storageKey: string, bookId: number): Status {
   if (typeof window === "undefined") return "none";
@@ -46,6 +75,8 @@ function BookRow({
 }) {
   const [status, setStatus] = useState<Status>("none");
   const [expanded, setExpanded] = useState(false);
+  const [lightbox, setLightbox] = useState(false);
+  const closeLightbox = useCallback(() => setLightbox(false), []);
 
   useEffect(() => {
     setStatus(getStatus(storageKey, book.id));
@@ -75,12 +106,16 @@ function BookRow({
     >
       {/* תמונת שער */}
       {book.coverUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={book.coverUrl}
-          alt={book.title}
-          className={`h-16 w-12 object-cover rounded border border-gray-200 shrink-0 self-start mt-0.5 ${status === "skip" ? "opacity-40" : ""}`}
-        />
+        <>
+          {lightbox && <ImageLightbox src={book.coverUrl} alt={book.title} onClose={closeLightbox} />}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            onClick={() => setLightbox(true)}
+            className={`h-16 w-12 object-cover rounded border border-gray-200 shrink-0 self-start mt-0.5 cursor-pointer hover:opacity-80 transition-opacity ${status === "skip" ? "opacity-40" : ""}`}
+          />
+        </>
       )}
 
       {/* רמה + חובה/רשות */}
