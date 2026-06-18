@@ -21,6 +21,9 @@ const ALLOWED_EMAILS = new Set([
   "yaelmatalon@educ.org.il",
 ]);
 
+const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith("https://");
+const cookiePrefix = useSecureCookies ? "__Secure-" : "";
+
 export const authOptions: NextAuthOptions = {
   debug: true,
   providers: [
@@ -29,6 +32,28 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}next-auth.session-token`,
+      options: { httpOnly: true, sameSite: "lax", path: "/", secure: useSecureCookies },
+    },
+    callbackUrl: {
+      name: `${cookiePrefix}next-auth.callback-url`,
+      options: { sameSite: "lax", path: "/", secure: useSecureCookies },
+    },
+    csrfToken: {
+      name: `next-auth.csrf-token`,
+      options: { httpOnly: true, sameSite: "lax", path: "/", secure: useSecureCookies },
+    },
+    pkceCodeVerifier: {
+      name: `${cookiePrefix}next-auth.pkce.code_verifier`,
+      options: { httpOnly: true, sameSite: "lax", path: "/", secure: useSecureCookies, maxAge: 900 },
+    },
+    state: {
+      name: `${cookiePrefix}next-auth.state`,
+      options: { httpOnly: true, sameSite: "lax", path: "/", secure: useSecureCookies, maxAge: 900 },
+    },
+  },
   callbacks: {
     async signIn({ user }) {
       return ALLOWED_EMAILS.has(user.email ?? "");
